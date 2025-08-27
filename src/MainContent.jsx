@@ -4,19 +4,37 @@ import { users } from "./data.js";
 function MainContent() {
   const [userList, setUserList] = useState(users);
   const [newUser, setNewUser] = useState({ name: "", email: "", role: "" });
-  
+  const [editingUser, setEditingUser] = useState(null);
+
   const handleAddUser = (e) => {
     e.preventDefault();
-    const id = userList.length + 1; 
-    setUserList([...userList, { id, ...newUser }]);
+    if (editingUser) {
+      setUserList(
+        userList.map((u) =>
+          u.id === editingUser.id ? { ...editingUser, ...newUser } : u
+        )
+      );
+      setEditingUser(null);
+    } else {
+      const id = userList.length + 1;
+      setUserList([...userList, { id, ...newUser }]);
+    }
     setNewUser({ name: "", email: "", role: "" });
+  };
+
+  const handleDelete = (id) => {
+    setUserList(userList.filter((u) => u.id !== id));
+  };
+  const handleEdit = (user) => {
+    setEditingUser(user);
+    setNewUser({ name: user.name, email: user.email, role: user.role });
   };
 
   return (
     <div className="main">
-      <h1>داشبورد کاربران</h1>
+      <h1>مدیریت کاربران</h1>
 
-      {/* فرم افزودن کاربر */}
+      {/* فرم افزودن/ویرایش کاربر */}
       <form onSubmit={handleAddUser} style={{ marginBottom: "20px" }}>
         <input
           type="text"
@@ -39,7 +57,9 @@ function MainContent() {
           onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
           required
         />
-        <button type="submit">➕ افزودن</button>
+        <button type="submit">
+          {editingUser ? "✏️ ویرایش کاربر" : "➕ افزودن کاربر"}
+        </button>
       </form>
 
       {/* جدول کاربران */}
@@ -50,6 +70,7 @@ function MainContent() {
             <th>نام</th>
             <th>ایمیل</th>
             <th>نقش</th>
+            <th>عملیات</th>
           </tr>
         </thead>
         <tbody>
@@ -59,6 +80,10 @@ function MainContent() {
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
+              <td>
+                <button onClick={() => handleEdit(user)}>✏️ ویرایش</button>
+                <button onClick={() => handleDelete(user.id)}>🗑️ حذف</button>
+              </td>
             </tr>
           ))}
         </tbody>
