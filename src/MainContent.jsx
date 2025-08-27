@@ -3,10 +3,47 @@ import { users } from "./data.js";
 
 function MainContent() {
   const [userList, setUserList] = useState(users);
+  const [newUser, setNewUser] = useState({ name: "", email: "", role: "" });
+
+  // تابع برای اضافه کردن کاربر
+  const handleAddUser = (e) => {
+    e.preventDefault();
+    const id = userList.length + 1; // خودکار ID بده
+    setUserList([...userList, { id, ...newUser }]);
+    setNewUser({ name: "", email: "", role: "" }); // خالی کردن فرم بعد ثبت
+  };
 
   return (
     <div className="main">
       <h1>داشبورد کاربران</h1>
+
+      {/* فرم افزودن کاربر */}
+      <form onSubmit={handleAddUser} style={{ marginBottom: "20px" }}>
+        <input
+          type="text"
+          placeholder="نام"
+          value={newUser.name}
+          onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+          required
+        />
+        <input
+          type="email"
+          placeholder="ایمیل"
+          value={newUser.email}
+          onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+          required
+        />
+        <input
+          type="text"
+          placeholder="نقش"
+          value={newUser.role}
+          onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+          required
+        />
+        <button type="submit">➕ افزودن</button>
+      </form>
+
+      {/* جدول کاربران */}
       <table border="1" cellPadding="10">
         <thead>
           <tr>
