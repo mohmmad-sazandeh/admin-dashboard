@@ -4,13 +4,12 @@ import { users } from "./data.js";
 function MainContent() {
   const [userList, setUserList] = useState(users);
   const [newUser, setNewUser] = useState({ name: "", email: "", role: "" });
-
-  // تابع برای اضافه کردن کاربر
+  
   const handleAddUser = (e) => {
     e.preventDefault();
-    const id = userList.length + 1; // خودکار ID بده
+    const id = userList.length + 1; 
     setUserList([...userList, { id, ...newUser }]);
-    setNewUser({ name: "", email: "", role: "" }); // خالی کردن فرم بعد ثبت
+    setNewUser({ name: "", email: "", role: "" });
   };
 
   return (
