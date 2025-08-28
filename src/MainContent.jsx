@@ -2,16 +2,24 @@ import React, { useState } from "react";
 
 function MainContent() {
   const [users, setUsers] = useState([
-    { id: 1, name: "Ali", email: "ali@test.com" },
-    { id: 2, name: "Sara", email: "sara@test.com" },
+    { id: 1, name: "Ali", email: "ali@example.com" },
+    { id: 2, name: "Sara", email: "sara@example.com" },
   ]);
+
   const [newUser, setNewUser] = useState({ name: "", email: "" });
 
-  const handleAddUser = () => {
+  const addUser = () => {
     if (newUser.name && newUser.email) {
-      setUsers([...users, { id: users.length + 1, ...newUser }]);
+      setUsers([
+        ...users,
+        { id: users.length + 1, ...newUser }
+      ]);
       setNewUser({ name: "", email: "" });
     }
+  };
+
+  const deleteUser = (id) => {
+    setUsers(users.filter((user) => user.id !== id));
   };
 
   return (
@@ -51,34 +59,42 @@ function MainContent() {
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((u) => (
-              <tr key={u.id}>
-                <td>{u.id}</td>
-                <td>{u.name}</td>
-                <td>{u.email}</td>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>
+                  <button onClick={() => deleteUser(user.id)}>Delete</button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
 
-        {/* فرم افزودن یوزر */}
+        {/* --- فرم اضافه کردن یوزر --- */}
         <div className="add-user-form">
           <input
             type="text"
             placeholder="Name"
             value={newUser.name}
-            onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+            onChange={(e) =>
+              setNewUser({ ...newUser, name: e.target.value })
+            }
           />
           <input
             type="email"
             placeholder="Email"
             value={newUser.email}
-            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+            onChange={(e) =>
+              setNewUser({ ...newUser, email: e.target.value })
+            }
           />
-          <button onClick={handleAddUser}>Add User</button>
+          <button onClick={addUser}>Add User</button>
         </div>
       </div>
     </div>
